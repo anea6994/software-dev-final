@@ -17,15 +17,17 @@ var pgp = require('pg-promise')();
 **********************/
 
 
-const dbConfig = {
-	host: 'localhost',
-	port: 5432,
-	database: 'football_db',
-	user: 'postgres',
-	password: 'pwd'
+let dbConfig = {
+ 	host: 'localhost',
+ 	port: 5432,
+ 	database: 'Reviews',
+ 	user: 'postgres',
+ 	password: 'pwd'
 };
 
-var db = pgp(dbConfig);
+const isProduction = process.env.NODE_ENV === 'production';
+dbConfig = isProduction ? process.env.DATABASE_URL : dbConfig;
+let db = pgp(dbConfig);
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -54,4 +56,9 @@ app.get('/reviews', function(req, res) {
 
 
 
-app.listen(3000);
+//app.listen(3000);
+const PORT = process.env.PORT || 8080;
+
+const server = app.listen(PORT, () => {
+	console.log(`Express running → PORT ${server.address().port}`);
+});
